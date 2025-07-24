@@ -28,4 +28,42 @@ selected_category = st.sidebar.selectbox("Select Category", df['Category'].uniqu
 
 filtered_df = df[(df['Region'] == selected_region) & (df['Category'] == selected_category)]
 
+st.metric("Total Sales", f"${filtered_df['Sales'].sum():,.2f}")
+st.metric("Total Profit", f"${filtered_df['Profit'].sum():,.2f}")
+st.metric("Units Sold", f"{filtered_df['Units'].sum():,}")
+
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("Sales by Month")
+    monthly_sales = filtered_df.groupby('Month')['Sales'].sum()
+    st.line_chart(monthly_sales)
+
+with col2:
+    st.subheader("Profit by Category")
+    category_profit = filtered_df.groupby('Category')['Profit'].sum()
+    st.bar_chart(category_profit)
+
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+st.subheader("Sales Heatmap by Region and Month")
+heatmap_data = filtered_df.pivot_table(index='Region', columns='Month', values='Sales', aggfunc='sum')
+
+fig, ax = plt.subplots()
+sns.heatmap(heatmap_data, annot=True, fmt=".0f", cmap="YlGnBu", ax=ax)
+st.pyplot(fig)
+
+from sklearn.linear_model import LinearRegression
+
+# Example: Predict future sales based on month
+X = filtered_df[['Month']]
+y = filtered_df['Sales']
+model = LinearRegression().fit(X, y)
+future_months = pd.DataFrame({'Month': [13, 14, 15]})
+predictions = model.predict(future_months)
+
+st.subheader("Sales Forecast")
+st.write(f"Predicted Sales for Month 13: ${predictions[0]:,.2f}")
+
 
