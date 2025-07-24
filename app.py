@@ -22,3 +22,10 @@ with col2:
     st.subheader("Profit by Region")
     st.line_chart(data.set_index('Region')['Profit'])
 
+st.sidebar.header("Filter Options")
+selected_region = st.sidebar.selectbox("Select Region", df['Region'].unique())
+selected_category = st.sidebar.selectbox("Select Category", df['Category'].unique())
+
+filtered_df = df[(df['Region'] == selected_region) & (df['Category'] == selected_category)]
+
+
