@@ -22,6 +22,10 @@ with col2:
     st.subheader("Profit by Region")
     st.line_chart(data.set_index('Region')['Profit'])
 
+import pandas as pd
+
+df = pd.read_csv("your_data.csv")  # replace with your actual filename or data source
+
 st.sidebar.header("Filter Options")
 selected_region = st.sidebar.selectbox("Select Region", df['Region'].unique())
 selected_category = st.sidebar.selectbox("Select Category", df['Category'].unique())
